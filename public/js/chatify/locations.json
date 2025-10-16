@@ -1,0 +1,12 @@
+{
+    "Jawa Barat": {
+        "Bandung": {
+            "districts": ["Cidadap", "Cicadas", "Cimahi"],
+            "shipping_cost": 15000
+        },
+        "Ciamis": {
+            "districts": ["Ciamis Kota", "Cipaku", "Pangandaran"],
+            "shipping_cost": 12000
+        }
+    }
+}
