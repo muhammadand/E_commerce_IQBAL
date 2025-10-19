@@ -10,27 +10,30 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $password = 'rivian1207';
-
-        // Contoh data 10 user
         $users = [
-            ['name' => 'User One', 'email' => 'user1@example.com'],
-            ['name' => 'User Two', 'email' => 'user2@example.com'],
-            ['name' => 'User Three', 'email' => 'user3@example.com'],
-            ['name' => 'User Four', 'email' => 'user4@example.com'],
-            ['name' => 'User Five', 'email' => 'user5@example.com'],
-            ['name' => 'User Six', 'email' => 'user6@example.com'],
-            ['name' => 'User Seven', 'email' => 'user7@example.com'],
-            ['name' => 'User Eight', 'email' => 'user8@example.com'],
-            ['name' => 'User Nine', 'email' => 'user9@example.com'],
-            ['name' => 'User Ten', 'email' => 'user10@example.com'],
+            [
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Owner',
+                'email' => 'owner@example.com',
+                'role' => 'owner',
+            ],
+            [
+                'name' => 'Customer',
+                'email' => 'customer@example.com',
+                'role' => 'customer',
+            ],
         ];
 
         foreach ($users as $user) {
             User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
-                'password' => Hash::make($password),
+                'role' => $user['role'],
+                'password' => Hash::make('password'), // Password default
             ]);
         }
     }

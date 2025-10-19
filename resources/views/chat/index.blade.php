@@ -1,39 +1,45 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="container mt-5">
-    <div class="card shadow-sm border-0 rounded">
-        <div class="card-header bg-white border-bottom">
-            <h4 class="mb-0 text-primary fw-bold">📩 Daftar Kontak</h4>
+<div class="max-w-4xl mx-auto mt-10">
+    <div class="bg-white shadow-md rounded-2xl overflow-hidden">
+        <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <h4 class="text-xl font-semibold flex items-center gap-2" style="color: #5f5b57;">
+                📩 Daftar Kontak
+            </h4>
         </div>
 
-        <ul class="list-group list-group-flush">
+        <ul class="divide-y divide-gray-100">
             @forelse ($users as $user)
-                <li class="list-group-item px-4 py-3">
+                <li>
                     <a href="{{ route('chat.show', $user->id) }}"
                        data-user-id="{{ $user->id }}"
-                       class="d-flex align-items-center text-decoration-none text-dark gap-3">
+                       class="flex items-center gap-4 px-6 py-4 hover:bg-[#fff6f8] transition duration-200">
                        
                         {{-- Foto profil (inisial) --}}
-                        <div class="me-3 flex-shrink-0">
-                            <div class="rounded-circle bg-pink-soft text-pink d-flex align-items-center justify-content-center fw-bold text-uppercase shadow-sm"
-                                 style="width: 48px; height: 48px;">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold uppercase shadow-sm"
+                                 style="background-color: #fdecef; color: #f06292;">
                                 {{ substr($user->name, 0, 1) }}
                             </div>
                         </div>
 
                         {{-- Nama dan status --}}
-                        <div class="flex-grow-1">
-                            <div class="fw-semibold text-truncate" style="font-size: 1rem;">{{ $user->name }}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-base font-medium truncate" style="color: #616060;">
+                                {{ $user->name }}
+                            </div>
                             @if (isset($unreadCounts[$user->id]) && $unreadCounts[$user->id] > 0)
-                                <small class="text-danger fw-semibold unread-label">Pesan belum dibaca ({{ $unreadCounts[$user->id] }})</small>
+                                <small class="text-red-500 font-medium unread-label">
+                                    Pesan belum dibaca ({{ $unreadCounts[$user->id] }})
+                                </small>
                             @endif
                         </div>
 
                         {{-- Badge unread --}}
                         @if (isset($unreadCounts[$user->id]) && $unreadCounts[$user->id] > 0)
-                            <div class="ms-auto">
-                                <span class="badge bg-danger rounded-pill unread-badge px-3 py-2">
+                            <div>
+                                <span class="bg-red-500 text-white text-xs font-semibold rounded-full px-3 py-1 unread-badge">
                                     {{ $unreadCounts[$user->id] }}
                                 </span>
                             </div>
@@ -41,58 +47,38 @@
                     </a>
                 </li>
             @empty
-                <li class="list-group-item text-muted text-center py-4">Belum ada kontak.</li>
+                <li class="text-center text-gray-400 py-6">Belum ada kontak.</li>
             @endforelse
         </ul>
     </div>
 </div>
 @endsection
 
-@section('styles')
-<style>
-    .bg-pink-soft {
-        background-color: #fdecef !important;
-    }
-
-    .text-pink {
-        color: #f06292 !important;
-    }
-
-    .list-group-item:hover {
-        background-color: #fff6f8;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .unread-badge {
-        font-size: 0.75rem;
-    }
-</style>
-@endsection
-
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const links = document.querySelectorAll('a[data-user-id]');
-
-        links.forEach(link => {
-            link.addEventListener('click', function () {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[data-user-id]').forEach(link => {
+            link.addEventListener('click', async function() {
                 const userId = this.dataset.userId;
 
-                fetch(`/chat/read-messages/${userId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(res => res.json())
-                .then(data => {
+                try {
+                    const res = await fetch(`/chat/read-messages/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({})
+                    });
+
+                    const data = await res.json();
                     if (data.success) {
                         this.querySelector('.unread-badge')?.remove();
                         this.querySelector('.unread-label')?.remove();
                     }
-                });
+                } catch (error) {
+                    console.error('Error updating read status:', error);
+                }
             });
         });
     });

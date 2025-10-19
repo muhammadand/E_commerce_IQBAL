@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable(); // Untuk keamanan verifikasi email
             $table->string('password');
-            $table->enum('role', ['admin', 'seller', 'customer'])->default('customer'); // Multi user
+            $table->enum('role', ['admin', 'owner', 'customer'])->default('customer'); // Multi user
             $table->string('image')->nullable();
            
             $table->text('alamat')->nullable();

@@ -1,21 +1,29 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div class="max-w-3xl mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-6" style="color: #5f5b57;">Tambah Voucher</h2>
 
-            <h2 class="h4 fw-bold mb-4">Tambah Voucher</h2>
+    <div class="bg-white shadow-md rounded-2xl p-6">
+        <form action="{{ route('vouchers.store') }}" method="POST" class="space-y-5">
+            @csrf
 
-            <form action="{{ route('vouchers.store') }}" method="POST">
-                @csrf
+            @include('vouchers.form')
 
-                @include('vouchers.form')
+            <div class="flex gap-3 pt-4">
+                <button type="submit" 
+                    class="px-5 py-2 rounded-xl font-medium text-white shadow transition duration-200 hover:opacity-90"
+                    style="background-color: #e99c2e;">
+                    Simpan
+                </button>
 
-                <button type="submit" class="btn  mt-3" style="background-color: #fff0f5;">Simpan</button>
-            </form>
-
-        </div>
+                <a href="{{ route('vouchers.index') }}" 
+                    class="px-5 py-2 rounded-xl font-medium text-white shadow transition duration-200 hover:opacity-90"
+                    style="background-color: #a09e9c;">
+                    Batal
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

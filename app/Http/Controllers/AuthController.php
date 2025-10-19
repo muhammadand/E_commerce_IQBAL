@@ -34,7 +34,7 @@ class AuthController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
-            'role'     => 'required|in:admin,seller,customer',
+            'role'     => 'required|in:admin,owner,customer',
         ]);
 
         User::create([
@@ -67,8 +67,8 @@ class AuthController extends Controller
             switch ($role) {
                 case 'admin':
                     return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, Admin!');
-                case 'seller':
-                    return redirect()->route('seller.dashboard')->with('success', 'Selamat datang, Seller!');
+                case 'owner':
+                    return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, Seller!');
                 case 'customer':
                     return redirect()->route('home.index')->with('success', 'Selamat datang!');
                 default:

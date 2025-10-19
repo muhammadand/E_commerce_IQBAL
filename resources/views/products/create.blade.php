@@ -1,93 +1,95 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card card-round">
-        <!-- Header -->
-        <div class="card-header" style="background-color: #fce4ec;">
-            <div class="card-head-row card-tools-still-right">
-                <div class="card-title text-dark fw-bold">🆕 Create Product</div>
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-md border border-gray-200 mt-6">
+    <!-- Header -->
+    <div class="bg-[#f8f8f8] rounded-t-2xl px-6 py-3 flex justify-between items-center border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-[#5f5b57]">
+            Create Product
+        </h2>
+    </div>
+
+    <!-- Form Body -->
+    <div class="px-6 py-6 bg-white rounded-b-2xl">
+        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+            @csrf
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-sm font-semibold text-[#5f5b57] mb-1">Name</label>
+                <input type="text" id="name" name="name"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060] placeholder-gray-400">
             </div>
-        </div>
 
-        <!-- Form Body -->
-        <div class="card-body" style="background-color: #fff0f5;">
-            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <!-- Description -->
+            <div>
+                <label for="description" class="block text-sm font-semibold text-[#5f5b57] mb-1">Description</label>
+                <textarea id="description" name="description" rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060] placeholder-gray-400"></textarea>
+            </div>
 
-                <div class="mb-3">
-                    <label for="name" class="form-label text-dark fw-semibold">Name</label>
-                    <input type="text" class="form-control border-pink" id="name" name="name">
+            <!-- Price -->
+            <div>
+                <label for="price" class="block text-sm font-semibold text-[#5f5b57] mb-1">Price</label>
+                <input type="text" id="price" name="price"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060] placeholder-gray-400">
+            </div>
+
+            <!-- Stock -->
+            <div>
+                <label for="stock" class="block text-sm font-semibold text-[#5f5b57] mb-1">Stock</label>
+                <input type="text" id="stock" name="stock"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060] placeholder-gray-400">
+            </div>
+
+            <!-- Category -->
+            <div>
+                <label for="category_id" class="block text-sm font-semibold text-[#5f5b57] mb-1">Category</label>
+                <select id="category_id" name="category_id"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060] bg-white">
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Jenis Produk -->
+            <div>
+                <label class="block text-sm font-semibold text-[#5f5b57] mb-1">Jenis Produk</label>
+                <div class="flex items-center gap-6 text-[#616060]">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="radio" name="is_premium" value="0" checked class="text-[#e99c2e] focus:ring-[#e99c2e]">
+                        <span>Biasa</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="radio" name="is_premium" value="1" class="text-[#e99c2e] focus:ring-[#e99c2e]">
+                        <span>Premium</span>
+                    </label>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label text-dark fw-semibold">Description</label>
-                    <textarea class="form-control border-pink" id="description" name="description" rows="3"></textarea>
-                </div>
+            <!-- Image -->
+            <div>
+                <label for="inputImage" class="block text-sm font-semibold text-[#5f5b57] mb-1">Image</label>
+                <input type="file" name="image" id="inputImage"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#e99c2e] focus:outline-none text-[#616060]">
+                @error('image')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-                <div class="mb-3">
-                    <label for="price" class="form-label text-dark fw-semibold">Price</label>
-                    <input type="text" class="form-control border-pink" id="price" name="price">
-                </div>
-
-                <div class="mb-3">
-                    <label for="stock" class="form-label text-dark fw-semibold">Stock</label>
-                    <input type="text" class="form-control border-pink" id="stock" name="stock">
-                </div>
-
-                <div class="mb-3">
-                    <label for="category_id" class="form-label text-dark fw-semibold">Category</label>
-                    <select name="category_id" id="category_id" class="form-control border-pink">
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label text-dark fw-semibold">Jenis Produk</label><br>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="is_premium" id="biasa" value="0" checked>
-                        <label class="form-check-label" for="biasa">Biasa</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="is_premium" id="premium" value="1">
-                        <label class="form-check-label" for="premium">Premium</label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="inputImage" class="form-label text-dark fw-semibold">Image</label>
-                    <input 
-                        type="file" 
-                        name="image" 
-                        class="form-control border-pink @error('image') is-invalid @enderror" 
-                        id="inputImage">
-                    @error('image')
-                        <div class="form-text text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mt-4 d-flex gap-2">
-                    <button type="submit" class="btn" style="background-color: #f48fb1; color: white;">
-                        💾 Submit
-                    </button>
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
+            <!-- Buttons -->
+            <div class="flex justify-end items-center gap-3 pt-4">
+                <a href="{{ route('products.index') }}"
+                   class="px-4 py-2 border border-gray-300 rounded-md text-[#616060] hover:bg-gray-100 transition">
+                    Cancel
+                </a>
+                <button type="submit"
+                    class="px-4 py-2 bg-[#e99c2e] hover:bg-[#d18b28] text-white rounded-md font-medium shadow-sm transition">
+                    Submit
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-
-<!-- Inline style -->
-<style>
-    .border-pink {
-        border: 1px solid #f8bbd0 !important;
-    }
-
-    .form-control:focus {
-        border-color: #f48fb1;
-        box-shadow: 0 0 0 0.15rem rgba(244, 143, 177, 0.25);
-    }
-</style>
 @endsection

@@ -1,28 +1,33 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="container py-3" style="max-width: 540px;">
-    <div class="card border-0 shadow-sm rounded-3" style="max-height: 80vh; display: flex; flex-direction: column;">
-        <div class="card-header bg-white border-bottom py-2 px-3 d-flex align-items-center justify-content-between">
-            <h6 class="mb-0 fw-semibold text-pink">💬 Chat dengan {{ $user->name }}</h6>
+<div class="flex justify-center py-6 bg-[#ffffff]">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-md flex flex-col max-h-[80vh] border border-gray-100">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+            <h6 class="font-semibold text-[#5f5b57] text-sm">
+                💬 Chat dengan <span class="text-[#e99c2e]">{{ $user->name }}</span>
+            </h6>
         </div>
 
-        <div id="messages" class="px-3 pt-3 overflow-auto" style="flex-grow: 1; min-height: 300px; max-height: 55vh;">
+        <!-- Chat Messages -->
+        <div id="messages" class="flex-1 overflow-y-auto px-4 pt-3 space-y-2 min-h-[300px] max-h-[55vh]">
             @foreach ($messages as $message)
                 @if ($message->from_user_id == auth()->id())
-                    <div class="d-flex justify-content-end mb-2">
-                        <div class="bg-pink text-white py-2 px-3 rounded-4 rounded-end-0 shadow-sm" style="max-width: 80%; font-size: 14px;">
+                    <div class="flex justify-end">
+                        <div class="bg-[#e99c2e] text-white px-3 py-2 rounded-2xl rounded-tr-none shadow-sm max-w-[80%] text-sm">
                             {{ $message->message }}
-                            <div class="text-white-50 text-end mt-1" style="font-size: 10px;">
+                            <div class="text-white/70 text-right text-[10px] mt-1">
                                 {{ $message->created_at->format('H:i') }}
                             </div>
                         </div>
                     </div>
                 @else
-                    <div class="d-flex justify-content-start mb-2">
-                        <div class="bg-light text-dark py-2 px-3 rounded-4 rounded-start-0 shadow-sm" style="max-width: 80%; font-size: 14px;">
+                    <div class="flex justify-start">
+                        <div class="bg-gray-100 text-[#616060] px-3 py-2 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] text-sm">
                             {{ $message->message }}
-                            <div class="text-muted mt-1" style="font-size: 10px;">
+                            <div class="text-[#a09e9c] text-[10px] mt-1">
                                 {{ $message->created_at->format('H:i') }}
                             </div>
                         </div>
@@ -31,20 +36,19 @@
             @endforeach
         </div>
 
-        <div class="card-footer bg-white border-top py-2 px-3">
-            <form id="chat-form" class="d-flex gap-2 align-items-center" onsubmit="sendMessage(event)">
+        <!-- Input Chat -->
+        <div class="border-t border-gray-200 px-4 py-2 bg-white">
+            <form id="chat-form" class="flex items-center gap-2" onsubmit="sendMessage(event)">
                 <input 
                     id="messageInput" 
                     type="text" 
                     placeholder="Ketik pesan..." 
                     autocomplete="off"
-                    class="form-control rounded-pill border border-pink small"
-                    style="font-size: 14px;"
-                />
+                    class="flex-1 border border-[#a09e9c]/40 rounded-full px-3 py-2 text-sm text-[#616060] focus:ring-2 focus:ring-[#e99c2e] focus:outline-none"
+                >
                 <button 
-                    type="submit" 
-                    class="btn bg-pink text-white rounded-pill px-3 py-1"
-                    style="font-size: 14px;"
+                    type="submit"
+                    class="bg-[#e99c2e] text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-[#d48b23] transition"
                 >
                     Kirim
                 </button>
@@ -52,25 +56,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .bg-pink {
-        background-color: #f48fb1 !important;
-    }
-    .text-pink {
-        color: #f06292 !important;
-    }
-    .border-pink {
-        border-color: #f06292 !important;
-    }
-    #messages::-webkit-scrollbar {
-        width: 5px;
-    }
-    #messages::-webkit-scrollbar-thumb {
-        background: #f48fb1;
-        border-radius: 3px;
-    }
-</style>
 
 <script>
     const messagesEl = document.getElementById('messages');
@@ -111,24 +96,24 @@
 
     function appendMessage(message) {
         const div = document.createElement('div');
-        div.classList.add('d-flex', 'mb-2');
+        div.classList.add('flex', 'mb-2');
 
         if (message.from_user_id === myId) {
-            div.classList.add('justify-content-end');
+            div.classList.add('justify-end');
             div.innerHTML = `
-                <div class="bg-pink text-white py-2 px-3 rounded-4 rounded-end-0 shadow-sm" style="max-width: 80%; font-size: 14px;">
+                <div class="bg-[#e99c2e] text-white px-3 py-2 rounded-2xl rounded-tr-none shadow-sm max-w-[80%] text-sm">
                     ${message.message}
-                    <div class="text-white-50 text-end mt-1" style="font-size: 10px;">
+                    <div class="text-white/70 text-right text-[10px] mt-1">
                         ${new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 </div>
             `;
         } else {
-            div.classList.add('justify-content-start');
+            div.classList.add('justify-start');
             div.innerHTML = `
-                <div class="bg-light text-dark py-2 px-3 rounded-4 rounded-start-0 shadow-sm" style="max-width: 80%; font-size: 14px;">
+                <div class="bg-gray-100 text-[#616060] px-3 py-2 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] text-sm">
                     ${message.message}
-                    <div class="text-muted mt-1" style="font-size: 10px;">
+                    <div class="text-[#a09e9c] text-[10px] mt-1">
                         ${new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 </div>
@@ -142,7 +127,6 @@
         try {
             const res = await fetch(`/chat/messages/${userId}`);
             const messages = await res.json();
-
             messagesEl.innerHTML = '';
             messages.forEach(appendMessage);
             scrollToBottom();
@@ -153,4 +137,14 @@
 
     setInterval(fetchMessages, 3000);
 </script>
+
+<style>
+    #messages::-webkit-scrollbar {
+        width: 5px;
+    }
+    #messages::-webkit-scrollbar-thumb {
+        background: #e99c2e;
+        border-radius: 4px;
+    }
+</style>
 @endsection

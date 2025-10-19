@@ -1,108 +1,118 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card card-round">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="card-title mb-0">Order List</div>
-                <div class="card-tools">
-                    <div class="dropdown">
-                        <button class="btn btn-icon btn-clean" type="button" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ route('products.index') }}">Products</a>
-                            <a class="dropdown-item" href="{{ route('discounts.index') }}">Discounts</a>
-                        </div>
-                    </div>
-                </div>
+<div class="max-w-7xl mx-auto mt-10 bg-white rounded-2xl shadow-md overflow-hidden">
+
+    {{-- Header --}}
+    <div class="flex justify-between items-center px-6 py-4 border-b border-[#a09e9c]/30">
+        <h2 class="text-2xl font-semibold text-[#5f5b57]">Daftar Pesanan</h2>
+
+        {{-- Dropdown --}}
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open" 
+                class="px-3 py-2 text-[#616060] border border-[#a09e9c]/40 rounded-lg hover:bg-[#e99c2e] hover:text-white transition">
+                ⋮
+            </button>
+            <div x-show="open" @click.away="open = false"
+                class="absolute right-0 mt-2 w-40 bg-white border border-[#a09e9c]/30 rounded-lg shadow-lg z-10">
+                <a href="{{ route('products.index') }}" 
+                   class="block px-4 py-2 hover:bg-[#e99c2e] hover:text-white rounded-t-lg transition">Produk</a>
+                <a href="{{ route('discounts.index') }}" 
+                   class="block px-4 py-2 hover:bg-[#e99c2e] hover:text-white rounded-b-lg transition">Diskon</a>
             </div>
         </div>
+    </div>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+    {{-- Alert Sukses --}}
+    @if (session('success'))
+        <div class="bg-green-100 text-green-700 px-6 py-3 border-t border-b border-green-200 text-sm">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Nama</th>
-                            <th>Produk / Bahan</th>
-                            <th>Total</th>
-                            <th class="text-end">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $i = 1; @endphp
+    {{-- Table --}}
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-left border-collapse">
+            <thead class="bg-[#f8f8f8] border-b border-[#a09e9c]/30 text-[#5f5b57]">
+                <tr>
+                    <th class="px-6 py-3 font-medium">#</th>
+                    <th class="px-6 py-3 font-medium">Nama</th>
+                    <th class="px-6 py-3 font-medium">Produk / Bahan</th>
+                    <th class="px-6 py-3 font-medium">Total</th>
+                    <th class="px-6 py-3 font-medium text-right">Aksi</th>
+                </tr>
+            </thead>
 
-                        {{-- TAMPILKAN ORDERS --}}
-                        @forelse ($orders as $order)
-                            <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{ $order->user->name }}</td>
-                                <td>
-                                    @if ($order->orderItems && $order->orderItems->isNotEmpty())
-                                        <ul class="list-unstyled mb-0">
-                                            @foreach ($order->orderItems as $item)
-                                                <li>
-                                                    <i class="fas fa-tags text-success me-1"></i>
-                                                    {{ $item->product->name }} – {{ $item->quantity }}x 
-                                                    <span class="text-muted">Rp{{ number_format($item->price, 0, ',', '.') }}</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        <span class="text-muted fst-italic">Tidak ada produk</span>
-                                    @endif
-                                </td>
-                                <td><strong>Rp{{ number_format($order->total, 0, ',', '.') }}</strong></td>
-                                <td class="text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
-                                            id="actionDropdown{{ $order->id }}" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            Actions
+            <tbody class="text-[#616060] divide-y divide-[#a09e9c]/20">
+                @php $i = 1; @endphp
+                @forelse ($orders as $order)
+                    <tr class="hover:bg-[#fffaf5] transition">
+                        <td class="px-6 py-4">{{ $i++ }}</td>
+                        <td class="px-6 py-4">{{ $order->user->name }}</td>
+
+                        <td class="px-6 py-4">
+                            @if ($order->orderItems && $order->orderItems->isNotEmpty())
+                                <ul class="space-y-1">
+                                    @foreach ($order->orderItems as $item)
+                                        <li class="flex items-center gap-2">
+                                            <span class="text-[#e99c2e]">🏷️</span>
+                                            <span>{{ $item->product->name }} – {{ $item->quantity }}x 
+                                                <span class="text-[#a09e9c]">Rp{{ number_format($item->price, 0, ',', '.') }}</span>
+                                            </span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <span class="italic text-[#a09e9c]">Tidak ada produk</span>
+                            @endif
+                        </td>
+
+                        <td class="px-6 py-4 font-semibold">
+                            Rp{{ number_format($order->total, 0, ',', '.') }}
+                        </td>
+
+                        {{-- Aksi --}}
+                        <td class="px-6 py-4 text-right">
+                            <div x-data="{ open: false }" class="relative inline-block">
+                                <button @click="open = !open"
+                                    class="px-3 py-1 border border-[#a09e9c]/40 rounded-lg text-[#616060] hover:bg-[#e99c2e] hover:text-white transition">
+                                    Aksi
+                                </button>
+                                <div x-show="open" @click.away="open = false"
+                                    class="absolute right-0 mt-2 w-40 bg-white border border-[#a09e9c]/30 rounded-lg shadow-lg z-10">
+                                    <a href="{{ route('orders.show', $order->id) }}"
+                                        class="block px-4 py-2 hover:bg-[#e99c2e] hover:text-white rounded-t-lg transition">
+                                        👁️ Lihat
+                                    </a>
+                                    {{-- Uncomment jika ingin menambah hapus
+                                    <form action="{{ route('order.destroy.admin', $order->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus order ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="w-full text-left px-4 py-2 hover:bg-red-500 hover:text-white rounded-b-lg transition">
+                                            🗑️ Hapus
                                         </button>
-                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown{{ $order->id }}">
-                                            <li>
-                                                <a class="dropdown-item" href="{{ route('orders.show', $order->id) }}">
-                                                    <i class="fas fa-eye me-2"></i> Lihat
-                                                </a>
-                                            </li>
-                                            {{-- <li>
-                                                <form action="{{ route('order.destroy.admin', $order->id) }}" method="POST"
-                                                    onsubmit="return confirm('Yakin ingin menghapus order ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="dropdown-item text-danger" type="submit">
-                                                        <i class="fas fa-trash-alt me-2"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            </li> --}}
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">Tidak ada order ditemukan.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                    </form>
+                                    --}}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center py-6 text-[#a09e9c] italic">
+                            Tidak ada pesanan ditemukan.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                {{ $orders->links() }}
-            </div>
-        </div>
+    {{-- Pagination --}}
+    <div class="px-6 py-4 border-t border-[#a09e9c]/20 flex justify-end">
+        {{ $orders->links() }}
     </div>
 </div>
 @endsection

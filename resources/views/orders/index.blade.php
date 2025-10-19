@@ -1,142 +1,162 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card card-round">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="card-title mb-0">Order List</div>
-            </div>
+<div class="w-full px-4 py-6">
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+            <h2 class="text-lg font-semibold text-[#5f5b57]">Order List</h2>
         </div>
 
+        <!-- Alert -->
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="bg-green-100 text-green-800 px-4 py-2 text-sm">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                    <thead class="thead-light">
-                        <tr class="text-center">
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Products</th>
-                            <th>Note</th>
-                            <th>Total</th>
-                            <th>Resi</th>
-                            <th>Status Pembayaran</th>
-                            <th>Status</th>
-                            <th class="text-end">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($orders as $index => $order)
-                            <tr>
-                                <td class="text-center">{{ $index + 1 }}</td>
-                                <td class="text-center">{{ $order->user->name }}</td>
-                                <td>
-                                    @if ($order->orderItems && $order->orderItems->isNotEmpty())
-                                        <ul class="mb-0 ps-3">
-                                            @foreach ($order->orderItems as $item)
-                                                <li>
-                                                    {{ $item->product->name ?? 'Nama Produk Tidak Tersedia' }}
-                                                    - {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
-                                                    
-                                                    @if(optional($item->product)->is_premium)
-                                                        <span class="text-danger fw-bold">(Premium)</span>
-                                                    @endif
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-100 text-[#616060] text-center">
+                    <tr>
+                        <th class="px-4 py-2 font-semibold">#</th>
+                        <th class="px-4 py-2 font-semibold">Name</th>
+                        <th class="px-4 py-2 font-semibold">Products</th>
+                        <th class="px-4 py-2 font-semibold">Note</th>
+                        <th class="px-4 py-2 font-semibold">Total</th>
+                        <th class="px-4 py-2 font-semibold">Resi</th>
+                        <th class="px-4 py-2 font-semibold">Status Pembayaran</th>
+                        <th class="px-4 py-2 font-semibold">Status</th>
+                        <th class="px-4 py-2 font-semibold text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-[#616060]">
+                    @forelse ($orders as $index => $order)
+                        <tr class="hover:bg-gray-50 text-center">
+                            <td class="px-4 py-2">{{ $index + 1 }}</td>
+                            <td class="px-4 py-2">{{ $order->user->name }}</td>
 
-                                                    <!-- Tampilkan produk dalam bundling jika ada -->
-                                                    @if($item->bundle)
-                                                        <ul class="ps-3">
-                                                            @foreach ($item->bundle->products as $bundledProduct)
-                                                                <li>
-                                                                    {{ $bundledProduct->name }} - Rp{{ number_format($bundledProduct->price, 0, ',', '.') }}
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        <span class="text-muted">No products</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">{{$order->note}}</td>
-                                <td class="text-center">Rp{{ number_format($order->total, 0, ',', '.') }}</td>
-                                <td>
-                                    <form action="{{ route('orders.updateResi', $order->id) }}" method="POST" class="d-flex justify-content-center align-items-center">
-                                        @csrf
-                                        @method('PUT')
-                                        <input 
-                                            type="text" 
-                                            name="resi" 
-                                            class="form-control form-control-sm me-2" 
-                                            placeholder="Input Resi" 
-                                            style="width: 250px;" 
-                                            value="{{ $order->resi }}"
-                                        >
-                                        <button type="submit" class="btn btn-sm " style="background-color: #fff0f5;">Save</button>
-                                    </form>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-{{ 
-                                        $order->payment_status == 'paid' ? 'success' : 
-                                        ($order->payment_status == 'failed' ? 'danger' : 
-                                        ($order->status == 'shipped' ? 'info' : 'warning')) 
-                                    }}">
-                                        {{ ucfirst($order->payment_status == 'paid' ? 'Paid' : ($order->payment_status == 'failed' ? 'Failed' : $order->status)) }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <form action="{{ route('orders.updateStatus', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto; margin: auto;">
-                                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="accepted" {{ $order->status == 'accepted' ? 'selected' : '' }}>Accepted</option>
-                                            <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                                            <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                            <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                                        </select>
-                                    </form>
-                                </td>
-                                <td class="text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
-                                            id="actionDropdown{{ $order->id }}" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown{{ $order->id }}">
+                            <!-- Products -->
+                            <td class="px-4 py-2 text-left">
+                                @if ($order->orderItems && $order->orderItems->isNotEmpty())
+                                    <ul class="list-disc list-inside space-y-1">
+                                        @foreach ($order->orderItems as $item)
                                             <li>
-                                                <a class="dropdown-item" href="{{ route('orders.show', $order->id) }}">
-                                                    View
-                                                </a>
+                                                {{ $item->product->name ?? 'Nama Produk Tidak Tersedia' }} -
+                                                {{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}
+                                                @if(optional($item->product)->is_premium)
+                                                    <span class="text-red-600 font-semibold">(Premium)</span>
+                                                @endif
+
+                                                @if($item->bundle)
+                                                    <ul class="list-disc list-inside ml-4 text-[#a09e9c]">
+                                                        @foreach ($item->bundle->products as $bundledProduct)
+                                                            <li>
+                                                                {{ $bundledProduct->name }} -
+                                                                Rp{{ number_format($bundledProduct->price, 0, ',', '.') }}
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
                                             </li>
-                                            <li>
-                                                <form action="{{ route('order.destroy', $order->id) }}" method="POST" >
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="dropdown-item text-danger" type="submit">Delete</button>
-                                                </form>
-                                            </li>
-                                        </ul>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-[#a09e9c] italic">No products</span>
+                                @endif
+                            </td>
+
+                            <td class="px-4 py-2">{{ $order->note }}</td>
+                            <td class="px-4 py-2">Rp{{ number_format($order->total, 0, ',', '.') }}</td>
+
+                            <!-- Resi -->
+                            <td class="px-4 py-2">
+                                <form action="{{ route('orders.updateResi', $order->id) }}" method="POST" class="flex items-center justify-center space-x-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <input 
+                                        type="text" 
+                                        name="resi" 
+                                        value="{{ $order->resi }}" 
+                                        placeholder="Input Resi"
+                                        class="w-48 border border-gray-300 rounded-full px-3 py-1 text-sm focus:ring-2 focus:ring-[#e99c2e] outline-none"
+                                    >
+                                    <button type="submit" class="bg-[#e99c2e] text-white rounded-full px-3 py-1 text-sm hover:bg-[#d48b23] transition">
+                                        Save
+                                    </button>
+                                </form>
+                            </td>
+
+                            <!-- Payment Status -->
+                            <td class="px-4 py-2">
+                                @php
+                                    $color = match($order->payment_status) {
+                                        'paid' => 'bg-green-100 text-green-800',
+                                        'failed' => 'bg-red-100 text-red-800',
+                                        default => ($order->status == 'shipped' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'),
+                                    };
+                                @endphp
+                                <span class="px-2 py-1 rounded-full text-xs font-medium {{ $color }}">
+                                    {{ ucfirst($order->payment_status == 'paid' ? 'Paid' : ($order->payment_status == 'failed' ? 'Failed' : $order->status)) }}
+                                </span>
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-4 py-2">
+                                <form action="{{ route('orders.updateStatus', $order->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select 
+                                        name="status"
+                                        onchange="this.form.submit()"
+                                        class="border border-gray-300 rounded-full text-sm px-2 py-1 focus:ring-2 focus:ring-[#e99c2e] outline-none"
+                                    >
+                                        <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="accepted" {{ $order->status == 'accepted' ? 'selected' : '' }}>Accepted</option>
+                                        <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
+                                        <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    </select>
+                                </form>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="px-4 py-2 text-right relative">
+                                <div x-data="{ open: false }" class="relative inline-block text-left">
+                                    <button @click="open = !open" class="bg-[#e99c2e] text-white text-sm px-3 py-1 rounded-full hover:bg-[#d48b23] transition">
+                                        Actions
+                                    </button>
+                                    <div 
+                                        x-show="open"
+                                        @click.away="open = false"
+                                        class="absolute right-0 mt-2 w-28 bg-white border border-gray-100 rounded-lg shadow-lg z-10"
+                                    >
+                                        <a href="{{ route('orders.show', $order->id) }}" class="block px-3 py-2 text-sm hover:bg-gray-50 text-[#616060]">
+                                            View
+                                        </a>
+                                        <form action="{{ route('order.destroy', $order->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                Delete
+                                            </button>
+                                        </form>
                                     </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">No orders found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-[#a09e9c] py-4">No orders found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
-        <div class="d-flex justify-content-center my-4">
+        <!-- Pagination -->
+        <div class="flex justify-center py-4">
             {{ $orders->links() }}
         </div>
     </div>

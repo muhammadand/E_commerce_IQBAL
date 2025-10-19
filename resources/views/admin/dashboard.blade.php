@@ -1,218 +1,135 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.admin')
 
 @section('title', 'Admin Dashboard')
 
 @section('content')
-    <div>
-        <h3 class="fw-bold mb-3">Dashboard</h3>
-        <h6 class="op-7 mb-2">Bayeng Putra</h6>
-    </div>
+<div>
+    <h3 class="text-[#5f5b57] font-bold mb-3 text-xl">Dashboard</h3>
+    <h6 class="text-[#a09e9c] mb-2">MEBEL ADEN SAFIRA JEPARA </h6>
+</div>
 
-
-  
-    </div>
-    <div class="row">
-      <div class="col-sm-6 col-md-3">
-        <div class="card card-stats card-round">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-icon">
-                <div
-                  class="icon-big text-center icon-primary bubble-shadow-small"
-                >
-                <i class="fas fa-box-open"></i>
-
-                </div>
-              </div>
-              <div class="col col-stats ms-3 ms-sm-0">
-                <div class="numbers">
-                  <p class="card-category">Product</p>
-                  <h4 class="card-title">{{ $totalProducts }}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+    <!-- Product Card -->
+    <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+        <div class="text-[#e99c2e] text-3xl">
+            <i class="fas fa-box-open"></i>
         </div>
-      </div>
-      <div class="col-sm-6 col-md-3">
-        <div class="card card-stats card-round">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-icon">
-                <div
-                  class="icon-big text-center icon-info bubble-shadow-small"
-                >
-                <i class="fas fa-shopping-cart"></i>
-
-                </div>
-              </div>
-              <div class="col col-stats ms-3 ms-sm-0">
-                <div class="numbers">
-                  <p class="card-category">Orders</p>
-                  <h4 class="card-title">{{ $totalOrders }}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-3">
-        <div class="card card-stats card-round">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-icon">
-                <div
-                  class="icon-big text-center icon-success bubble-shadow-small"
-                >
-                <i class="fas fa-coins"></i>
-
-                </div>
-              </div>
-              <div class="col col-stats ms-3 ms-sm-0">
-                <div class="numbers">
-                  <p class="card-category">Revenue</p>
-                  <small class="card-title">{{ number_format($totalOrder, 0, ',', '.') }}</small>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-md-3">
-        <div class="card card-stats card-round">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-icon">
-                <div
-                  class="icon-big text-center icon-secondary bubble-shadow-small"
-                >
-                <i class="fas fa-users"></i>
-
-                </div>
-              </div>
-              <div class="col col-stats ms-3 ms-sm-0">
-                <div class="numbers">
-                  <p class="card-category">Users</p>
-                  <h4 class="card-title">{{ $totalUsers }}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-
-   
-    {{-- row 3 --}}
-
-       
-
-
-    {{-- row 4 --}}
-
-
-    <div class="row">
-      <div class="col-md-5 mb-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Top 5 Pelanggan Aktif</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Nama</th>
-                                <th>Jumlah Order</th>
-                                <th>Total Belanja</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topCustomers as $cust)
-                            <tr>
-                                <td>{{ $cust->name }}</td>
-                                <td>{{ $cust->total_orders }}</td>
-                                <td>Rp{{ number_format($cust->total_spent, 0, ',', '.') }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div>
+            <p class="text-[#5f5b57] font-semibold">Product</p>
+            <h4 class="text-[#616060] text-lg font-bold">{{ $totalProducts }}</h4>
         </div>
     </div>
-        
 
-        <div class="col-md-7">
-          <div class="card card-round">
-              <div class="card-header">
-                  <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">Transaction History</div>
-                      <div class="card-tools">
-                          <div class="dropdown">
-                              <button class="btn btn-icon btn-clean me-0" type="button" id="dropdownMenuButton"
-                                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-h"></i>
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                  <a class="dropdown-item" href="#">Action</a>
-                                  <a class="dropdown-item" href="#">Another action</a>
-                                  <a class="dropdown-item" href="#">Something else here</a>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="card-body p-0">
-                  <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                          <thead class="thead-light">
-                              <tr>
-                                  <th scope="col">Payment Number</th>
-                                  <th scope="col" class="text-end">Date & Time</th>
-                                  <th scope="col" class="text-end">Amount</th>
-                                  <th scope="col" class="text-end">Status</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              @foreach($orders as $order)
-                                  <tr>
-                                      <th scope="row">
-                                          <button class="btn btn-icon btn-round btn-success btn-sm me-2">
-                                              <i class="fa fa-check"></i>
-                                          </button>
-                                          Payment from #{{ $order->midtrans_order_id }}
-                                      </th>
-                                      <td class="text-end">{{ \Carbon\Carbon::parse($order->created_at)->format('M d, Y, h:ia') }}</td>
-                                      <td class="text-end">Rp.{{ number_format($order->total) }}</td>
-                                      <td class="text-end">
-                                          <span class="badge badge-{{ $order->payment_status == 'paid' ? 'success' : 'warning' }}">
-                                              {{ ucfirst($order->payment_status) }}
-                                          </span>
-                                      </td>
-                                  </tr>
-                              @endforeach
-                          </tbody>
-                      </table>
-                  </div>
-                  <!-- Pagination Links -->
-                  <div class="d-flex justify-content-center">
-                      {{ $orders->links() }}
-                  </div>
-              </div>
-          </div>
-      </div>
-      
-
-    </div>
-{{-- 
-    <div class="container mt-5">
-        <h2 class="mb-4">👑 Admin Dashboard</h2>
-        <div class="alert alert-success">
-            Selamat datang, {{ Auth::user()->name }}! Anda login sebagai <strong>Admin</strong>.
+    <!-- Orders Card -->
+    <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+        <div class="text-[#e99c2e] text-3xl">
+            <i class="fas fa-shopping-cart"></i>
         </div>
-    </div> --}}
+        <div>
+            <p class="text-[#5f5b57] font-semibold">Orders</p>
+            <h4 class="text-[#616060] text-lg font-bold">{{ $totalOrders }}</h4>
+        </div>
+    </div>
+
+    <!-- Revenue Card -->
+    <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+        <div class="text-[#e99c2e] text-3xl">
+            <i class="fas fa-coins"></i>
+        </div>
+        <div>
+            <p class="text-[#5f5b57] font-semibold">Revenue</p>
+            <h4 class="text-[#616060] text-lg font-bold">
+                Rp{{ number_format($totalOrder, 0, ',', '.') }}
+            </h4>
+        </div>
+    </div>
+
+    <!-- Users Card -->
+    <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+        <div class="text-[#e99c2e] text-3xl">
+            <i class="fas fa-users"></i>
+        </div>
+        <div>
+            <p class="text-[#5f5b57] font-semibold">Users</p>
+            <h4 class="text-[#616060] text-lg font-bold">{{ $totalUsers }}</h4>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
+    <!-- Top Customers -->
+    <div class="col-span-5 md:col-span-2 bg-white rounded-lg shadow p-4">
+        <h5 class="text-[#5f5b57] font-semibold mb-3">Top 5 Pelanggan Aktif</h5>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto border-collapse">
+                <thead>
+                    <tr class="bg-[#f5f5f5] text-[#5f5b57]">
+                        <th class="py-2 px-4 border-b">Nama</th>
+                        <th class="py-2 px-4 border-b">Jumlah Order</th>
+                        <th class="py-2 px-4 border-b">Total Belanja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($topCustomers as $cust)
+                        <tr class="text-[#616060] hover:bg-[#fff7e6]">
+                            <td class="py-2 px-4 border-b">{{ $cust->name }}</td>
+                            <td class="py-2 px-4 border-b">{{ $cust->total_orders }}</td>
+                            <td class="py-2 px-4 border-b">Rp{{ number_format($cust->total_spent, 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="col-span-5 md:col-span-3 bg-white rounded-lg shadow p-4">
+        <div class="flex justify-between items-center mb-3">
+            <h5 class="text-[#5f5b57] font-semibold">Transaction History</h5>
+            <div class="relative">
+                <button class="text-[#616060] hover:text-[#e99c2e]">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead class="bg-[#f5f5f5] text-[#5f5b57]">
+                    <tr>
+                        <th class="py-2 px-4 text-left">Payment Number</th>
+                        <th class="py-2 px-4 text-end">Date & Time</th>
+                        <th class="py-2 px-4 text-end">Amount</th>
+                        <th class="py-2 px-4 text-end">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="text-[#616060]">
+                    @foreach($orders as $order)
+                        <tr class="hover:bg-[#fff7e6]">
+                            <td class="py-2 px-4">
+                                <span class="inline-flex items-center gap-2">
+                                    <button class="bg-[#e99c2e] text-white rounded-full p-1 text-xs">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    Payment from #{{ $order->midtrans_order_id }}
+                                </span>
+                            </td>
+                            <td class="py-2 px-4 text-end">{{ \Carbon\Carbon::parse($order->created_at)->format('M d, Y, h:ia') }}</td>
+                            <td class="py-2 px-4 text-end">Rp{{ number_format($order->total) }}</td>
+                            <td class="py-2 px-4 text-end">
+                                <span class="px-2 py-1 rounded text-white {{ $order->payment_status == 'paid' ? 'bg-green-600' : 'bg-yellow-500' }}">
+                                    {{ ucfirst($order->payment_status) }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-center mt-3">
+            {{ $orders->links() }}
+        </div>
+    </div>
+</div>
 @endsection
