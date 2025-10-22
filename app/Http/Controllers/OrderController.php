@@ -194,13 +194,14 @@ class OrderController extends Controller
  $categories = Category::all(); 
  $userId = Auth::id(); // Menggunakan Auth Facade untuk mendapatkan user ID
         $cartItems = Cart::where('user_id', $userId)->with('product')->get();
+        $cartItemsCount = $cartItems->count();
     // Pastikan status pembayaran adalah 'paid'
     if ($order->payment_status != 'paid') {
         return redirect()->route('orders.index')->with('error', 'Pembayaran belum berhasil.');
     }
 
     // Tampilkan halaman detail pembayaran
-    return view('orders.payment_details', compact('order','categories','userId','cartItems','wishlistItems','biggestDiscount'));
+    return view('orders.payment_details', compact('order','categories','cartItemsCount','userId','cartItems','wishlistItems','biggestDiscount'));
 }
     
 }

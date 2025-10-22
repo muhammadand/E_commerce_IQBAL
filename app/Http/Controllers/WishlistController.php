@@ -53,9 +53,51 @@ class WishlistController extends Controller
 
     // Menampilkan wishlist pengguna
     public function index()
-    {
-        $wishlists = Wishlist::with('product')->where('user_id', Auth::id())->paginate(10);
+{
+    $user = Auth::user();
 
-        return view('wishlist.index', compact('wishlists'));
+    // Ambil data wishlist user
+    $wishlists = \App\Models\Wishlist::with('product')
+        ->where('user_id', Auth::id())
+        ->paginate(10);
+
+    // Ambil diskon terbesar
+    $biggestDiscount = \App\Models\Discount::where('status', 'active')
+        ->with('product')
+        ->get()
+        ->sortByDesc(function ($discount) {
+            return $discount->calculated_final_price;
+        })
+        ->first();
+
+    // Ambil wishlist user (untuk badge atau ikon love)
+    $wishlistItems = [];
+    if ($user) {
+        $wishlistItems = \App\Models\Wishlist::with('product')
+            ->where('user_id', $user->id)
+            ->get();
     }
+
+    // Ambil data keranjang
+    $cartItems = \App\Models\Cart::where('user_id', Auth::id())->get();
+    $cartItemsCount = $cartItems->count();
+    $totalPrice = $cartItems->sum(function ($cartItem) {
+        return $cartItem->quantity * $cartItem->product->price;
+    });
+      $categories = \App\Models\Category::all();
+    
+
+    // Kirim semua data ke view
+    return view('wishlist.index', compact(
+        'wishlists',
+        'wishlistItems',
+        'cartItemsCount',
+        'cartItems',
+        'totalPrice',
+        'biggestDiscount',
+        'categories',
+        'user'
+    ));
+}
+
 }

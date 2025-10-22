@@ -1,87 +1,78 @@
 @extends('layouts.app')
+
 @section('content')
+<div style="background-color: #f8f9fa; min-height: 100vh; padding: 2rem 0;">
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 1rem;">
+        
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="position: relative; display: inline-block;">
+                <img src="https://i.pravatar.cc/120?u={{ Auth::user()->email }}" 
+                     alt="Avatar"
+                     style="width: 120px; height: 120px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="position: absolute; bottom: 5px; right: 5px; background-color: #ff6b6b; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <h2 style="margin-top: 1rem; font-weight: 700; color: #333;">{{ Auth::user()->name }}</h2>
+            <p style="color: #777;">Profil Akun Anda</p>
+        </div>
 
-<!-- BREADCRUMB -->
-<div class="section" style="background: #f5f5f5; padding: 20px 0;">
-    <div class="container">
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 10px; font-size: 14px;">
-            <li><a href="#" style="text-decoration: none; color: #dc1919;">Home</a></li>
-            <li style="color: #7f8c8d;">/</li>
-            <li style="color: #333;">Profil Pengguna</li>
-        </ul>
-    </div>
-</div>
-<!-- /BREADCRUMB -->
+        <!-- Profile Card -->
+        <div style="background-color: white; border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                
+                <!-- Email -->
+                <div>
+                    <div style="font-size: 0.8rem; color: #999; text-transform: uppercase; font-weight: 600;">Email</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: #ff6b6b;"></i>
+                        <span style="color: #333;">{{ Auth::user()->email }}</span>
+                    </div>
+                </div>
 
-<!-- PROFILE SECTION -->
-<div class="section" style="padding: 40px 0;">
-    <div class="container" style="max-width: 1000px; margin: auto;">
-        <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
-            <!-- Profile Image -->
-            <div style="flex: 1; min-width: 250px;">
-                <div style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center;">
-                    <img src="{{ asset($user->image) }}" alt="User Image" style="width: 100%; max-width: 250px; height: auto; border-radius: 8px; object-fit: cover;">
+                <!-- Alamat -->
+                <div>
+                    <div style="font-size: 0.8rem; color: #999; text-transform: uppercase; font-weight: 600;">Alamat</div>
+                    <div style="display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.5rem;">
+                        <i class="fas fa-map-marker-alt" style="color: #ff6b6b; margin-top: 3px;"></i>
+                        <span style="color: #333;">{{ Auth::user()->alamat ?? 'Belum diisi' }}</span>
+                    </div>
+                </div>
+
+                <!-- Nomor Telepon -->
+                <div>
+                    <div style="font-size: 0.8rem; color: #999; text-transform: uppercase; font-weight: 600;">Nomor Telepon</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <i class="fas fa-phone-alt" style="color: #ff6b6b;"></i>
+                        <span style="color: #333;">{{ Auth::user()->nomor_telpon ?? 'Belum diisi' }}</span>
+                    </div>
+                </div>
+
+                <!-- Points -->
+                <div>
+                    <div style="font-size: 0.8rem; color: #999; text-transform: uppercase; font-weight: 600;">Points</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <i class="fas fa-star" style="color: #ffca28;"></i>
+                        <span style="color: #333;">{{ Auth::user()->points ?? 0 }} Points</span>
+                    </div>
                 </div>
             </div>
 
-          <!-- Profile Info -->
-<div style="flex: 2; min-width: 300px;">
-    <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #2c3e50;">Profil Pengguna</h2>
+            <!-- Buttons -->
+            <div style="display: flex; justify-content: space-between; margin-top: 2.5rem;">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST">@csrf</form>
+                <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        style="background-color: #ff6b6b; color: white; border: none; border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3); transition: all 0.3s;">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </button>
 
-        <div style="margin-bottom: 15px;">
-            <h5 style="margin: 0; font-size: 16px; color: #7f8c8d;">Nama</h5>
-            <p style="margin: 5px 0;">{{ $user->name }}</p>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <h5 style="margin: 0; font-size: 16px; color: #7f8c8d;">Email</h5>
-            <p style="margin: 5px 0;">{{ $user->email }}</p>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <h5 style="margin: 0; font-size: 16px; color: #7f8c8d;">Telepon</h5>
-            <p style="margin: 5px 0;">{{ $user->nomor_telpon ?? '-' }}</p>
-        </div>
-
-        <div style="margin-bottom: 25px;">
-            <h5 style="margin: 0; font-size: 16px; color: #7f8c8d;">Alamat</h5>
-            <p style="margin: 5px 0;">{{ $user->alamat ?? '-' }}</p>
-        </div>
-
-        <!-- Tambahan Poin -->
-        <div style="margin-bottom: 25px; padding: 15px; background-color: #f0f9ff; border-radius: 8px; border: 1px solid #d0eaff;">
-            <h5 style="margin: 0; font-size: 16px; color: #2980b9;">Poin Kamu</h5>
-            <p style="margin: 8px 0; font-size: 18px; font-weight: bold; color: #3498db;">
-                <i class="fa fa-star" style="color: gold; margin-right: 6px;"></i>
-                {{ number_format($user->points ?? 0, 0, ',', '.') }} Poin
-            </p>
-            <a href="{{route('home.index')}}"    style="padding: 8px 18px; background-color: gold; border: none; color: white; border-radius: 20px; font-weight: bold; cursor: pointer; display: inline-block; text-decoration: none; transition: all 0.3s ease;"
-            onmouseover="this.style.backgroundColor='#d4af37'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'"
-            onmouseout="this.style.backgroundColor='gold'; this.style.transform='scale(1)'; this.style.boxShadow='none'">
-                <i class="fa fa-gift"></i> Gunakan Poin
-            </a>
-           
-        </div>
-
-        <a href=" {{route('profil.edit')}}"  style="padding: 10px 20px; background-color: #e70c0c; border: none; color: white; border-radius: 20px; font-weight: bold; cursor: pointer; transition: background-color 0.3s;"
-        onmouseover="this.style.backgroundColor='#c0392b'"
-        onmouseout="this.style.backgroundColor='#e70c0c'" >
-        <i class="fa fa-pencil"></i> Lengkapi Data
-    </a>
-      
-    </div>
-</div>
-
-
-
+                <a href="{{ route('profil.edit') }}" 
+                   style="border: 2px solid #ff6b6b; color: #ff6b6b; border-radius: 8px; padding: 0.75rem 1.5rem; font-weight: 600; text-decoration: none; transition: all 0.3s;">
+                    <i class="fas fa-user-edit me-1"></i> Edit Profil
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<!-- /PROFILE SECTION -->
-
-
-
-
-
 @endsection

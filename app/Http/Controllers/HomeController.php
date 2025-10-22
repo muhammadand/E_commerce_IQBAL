@@ -210,7 +210,6 @@ class HomeController extends Controller
             ->where('user_id', $user->id)
             ->get();
     }
-    $user = Auth::user();
     $cartItems = Cart::where('user_id', Auth::id())->get(); // ← sudah diganti
     $cartItemsCount = $cartItems->count();
     $totalPrice = $cartItems->sum(function ($cartItem) {

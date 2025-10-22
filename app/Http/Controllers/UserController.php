@@ -42,7 +42,7 @@ class UserController extends Controller
 
 
         $categories = Category::all();
-        $cartItems = Cart::where('user_id', auth()->id())->get();
+        $cartItems = Cart::where('user_id', Auth::id())->get();
         $cartItemsCount = $cartItems->count();
         $totalPrice = $cartItems->sum(function ($cartItem) {
             return $cartItem->quantity * $cartItem->product->price;
@@ -87,7 +87,7 @@ class UserController extends Controller
 
 
         $categories = Category::all();
-        $cartItems = Cart::where('user_id', auth()->id())->get();
+        $cartItems = Cart::where('user_id', Auth::id())->get();
         $cartItemsCount = $cartItems->count();
         $totalPrice = $cartItems->sum(function ($cartItem) {
             return $cartItem->quantity * $cartItem->product->price;

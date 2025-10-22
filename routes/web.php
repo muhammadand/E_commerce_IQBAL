@@ -111,6 +111,7 @@ Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('
 Route::get('/ongkir', [CheckoutController::class, 'ongkir_index'])->name('ongkir.index');
 Route::post('/cek-ongkir', [CheckoutController::class, 'cekOngkir'])->name('cek-ongkir');
 Route::post('save-ongkir', [CheckoutController::class, 'saveOngkir'])->name('save-ongkir');
+Route::post('/ongkir/set-session', [CheckoutController::class, 'setSession'])->name('ongkir.setSession');
 
 // ======================== CART ========================
 Route::middleware('auth')->group(function () {
