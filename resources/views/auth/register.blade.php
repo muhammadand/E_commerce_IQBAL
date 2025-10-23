@@ -29,7 +29,7 @@
                     <select name="role" class="form-select" required>
                         <option value="">-- Pilih Role --</option>
                         <option value="admin">Admin</option>
-                        {{-- <option value="seller">Seller</option> --}}
+                        <option value="owner">Owner</option>
                         <option value="customer">Customer</option>
                     </select>
                 </div>

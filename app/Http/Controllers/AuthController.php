@@ -44,7 +44,7 @@ class AuthController extends Controller
             'role'     => $request->role,
         ]);
 
-        return redirect()->route('home.index')->with('success', 'Registrasi berhasil, silakan login.');
+        return redirect()->route('login.form')->with('success', 'Registrasi berhasil, silakan login.');
     }
 
     public function showLogin()
