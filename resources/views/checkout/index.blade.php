@@ -178,7 +178,7 @@
                             <span style="font-weight: 600; color: #333;">Rp{{ number_format($total, 0, ',', '.') }}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                            <span style="font-size: 0.875rem; color: #666;">Shipping</span>
+                            <span style="font-size: 0.875rem; color: #666;">Shippingg</span>
                             <span style="font-weight: 600; color: #333;">Rp{{ number_format($ongkirCost, 0, ',', '.') }}</span>
                         </div>
                         @if ($voucher)
